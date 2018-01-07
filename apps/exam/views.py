@@ -14,7 +14,6 @@ def dashboard(request):
     'user' : user,
     'wished_items' : wished_items,
     'other_wishs' : other_wishs
-    'users' : Users.objects.get('')
     }
     return render (request, "exam/dashboard.html", context)
 def wish_items(request, item_id):
