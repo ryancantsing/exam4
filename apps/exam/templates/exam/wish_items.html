@@ -7,7 +7,11 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>{{ item.name }}</h1>
     <p>Users who added this product/item under their wish list</p>
+    {% for people_who_want in people_who_wants %}
+    <p>{{ people_who_want.name }}</p>
+    {% endfor %}
 
 </body>
 </html>

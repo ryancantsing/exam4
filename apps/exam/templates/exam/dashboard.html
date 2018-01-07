@@ -19,12 +19,21 @@
                 <th>Action</th>
             </tr>
             {% for wished_item in wished_items %}
-            <tr>
-                <td>{{ wished_item.name }}</td>
-                <td>{{ wished_item.added_by}}</td>
-                <td>{{ wished_item.created_by}}</td>
-                <td><a href="/remove_from_list">Remove From My Wishlist</a></td>
-            </tr>
+                {% if user_uploaded == session.user_id %}
+                <tr>
+                    <td><a href="/wish_items/{{ wished_item.id }}">{{ wished_item.name }}</a></td>
+                    <td>{{ wished_item.added_by.name}}</td>
+                    <td>{{ wished_item.created_at}}</td>
+                    <td><a href="/delete_item/{{ wished_item.id }}">Delete</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td><a href="/wish_items/{{ wished_item.id }}">{{ wished_item.name }}</a></td>
+                    <td>{{ wished_item.added_by.name}}</td>
+                    <td>{{ wished_item.created_at}}</td>
+                    <td><a href="/remove_from_list/{{ wished_item.id }}">Remove From My Wishlist</a></td>
+                </tr>
+                {% endif %}
             {% endfor %}
         </table>
     <div id="OtherWishList">
@@ -37,10 +46,10 @@
             </tr>
             {% for other_wish in other_wishs %}
             <tr>
-                <td><a href="/wish_items">{{ other_wish.name }}</a></td>
-                <td>{{ other_wish.added_by}}</td>
-                <td>{{ other_wish.created_by}}</td>
-                <td><a href="/add_to_list">Add to My Wishlist</a></td>
+                <td><a href="/wish_items/{{ other_wish.id }}">{{ other_wish.name }}</a></td>
+                <td>{{ other_wish.added_by.name}}</td>
+                <td>{{ other_wish.created_at}}</td>
+                <td><a href="/add_to_list/{{ other_wish.id }}">Add to Wishlist!</td>
             </tr>
             {% endfor %}
         </table>

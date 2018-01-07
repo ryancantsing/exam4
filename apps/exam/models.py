@@ -25,22 +25,16 @@ class UserManager(models.Manager):
 
     def validate_registration(self, post_data):
         errors = []
-        # check length of name fields
         if len(post_data['name']) < 2 or len(post_data['username']) < 2:
             errors.append("name fields must be at least 3 characters")
-        # check length of name password
         if len(post_data['password']) < 8:
             errors.append("password must be at least 8 characters")
-        # check name fields for letter characters            
         if not re.match(NAME_REGEX, post_data['name']) or not re.match(NAME_REGEX, post_data['username']):
             errors.append('name fields must be letter characters only')
-        # check emailness of email
         if not re.match(EMAIL_REGEX, post_data['email']):
             errors.append("invalid email")
-        # check uniqueness of email
         if len(Users.objects.filter(email=post_data['email'])) > 0:
             errors.append("email already in use")
-        # check password == password_confirm
         if post_data['password'] != post_data['password_confirm']:
             errors.append("passwords do not match")
 
@@ -59,7 +53,7 @@ class UserManager(models.Manager):
         return errors
 
 class ItemManager(models.Manager):
-    def validate_item(self, post_data):
+    def validate_item(self, post_data, user):
         errors = []
         if len(post_data['name']) < 3:
             errors.append("Name of Item must be at least 3 characters!")
@@ -68,6 +62,7 @@ class ItemManager(models.Manager):
         if not errors:
             new_item = self.create(
                 name=post_data['name'],
+                added_by = user,
             )
             return new_item
         return errors
@@ -88,8 +83,8 @@ class Users(models.Model):
 
 class Items(models.Model):
     name = models.CharField(max_length=255)
-    added_by = models.ForeignKey(Users, related_name="added_by", null=True)
-    wished_for = models.ForeignKey(Users, related_name="wished_for", null=True)
+    added_by = models.ForeignKey(Users, related_name="user_uploaded", null=True)
+    wished_at = models.ManyToManyField(Users, related_name="wished_items")
     created_at = models.DateTimeField(auto_now_add = True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = ItemManager()
